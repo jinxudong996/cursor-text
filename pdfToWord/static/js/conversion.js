@@ -34,7 +34,6 @@ function startConversion(taskId) {
 function showConversionProgress() {
   $(".conversion-progress").show();
   $(".progress-text").text("转换中...");
-  $(".progress-bar").css("width", "0%");
 }
 
 // 隐藏转换进度
@@ -44,8 +43,8 @@ function hideConversionProgress() {
 
 // 更新转换进度
 function updateConversionProgress(percent) {
-  $(".progress-bar").css("width", percent + "%");
-  $(".progress-text").text("转换中... " + percent + "%");
+  // 仅保持文字为"转换中..."，不显示百分比
+  $(".progress-text").text("转换中...");
 }
 
 // 显示下载按钮
