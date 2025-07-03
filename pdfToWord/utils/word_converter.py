@@ -1,39 +1,26 @@
-from docx import Document
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
+import subprocess
 import os
 
 class WordConverter:
     def convert_to_pdf(self, word_path):
-        """将Word文档转换为PDF"""
+        """用LibreOffice将Word转为PDF，保留全部格式（使用绝对路径）"""
         try:
-            # 读取Word文档
-            doc = Document(word_path)
-            
-            # 创建PDF文件
-            output_path = word_path.replace('.docx', '.pdf')
-            c = canvas.Canvas(output_path, pagesize=letter)
-            width, height = letter
-            
-            y_position = height - 50  # 起始位置
-            
-            # 提取文本并写入PDF
-            for paragraph in doc.paragraphs:
-                text = paragraph.text
-                if text.strip():
-                    # 简单的文本换行处理
-                    lines = self.wrap_text(text, width - 100)
-                    for line in lines:
-                        if y_position < 50:  # 需要新页面
-                            c.showPage()
-                            y_position = height - 50
-                        
-                        c.drawString(50, y_position, line)
-                        y_position -= 20
-            
-            c.save()
+            word_path = os.path.abspath(word_path)
+            output_dir = os.path.dirname(word_path)
+            cmd = [
+                "soffice",
+                "--headless",
+                "--convert-to", "pdf",
+                "--outdir", output_dir,
+                word_path
+            ]
+            subprocess.run(cmd, check=True)
+            base, ext = os.path.splitext(word_path)
+            output_path = base + '.pdf'
+            if not os.path.exists(output_path):
+                # 兼容.doc扩展名
+                output_path = word_path.rsplit('.', 1)[0] + '.pdf'
             return output_path
-            
         except Exception as e:
             raise Exception(f"Word转换失败: {str(e)}")
     
