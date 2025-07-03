@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF转Word工具 - 免费在线转换</title>
+    <meta
+      name="description"
+      content="免费在线PDF转Word工具，支持Word转PDF，无需注册，即用即走"
+    />
+    <meta name="keywords" content="PDF转Word, Word转PDF, 在线转换, 免费工具" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <!-- 头部 -->
+    <header class="header">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h1 class="logo">PDF转Word工具</h1>
+          </div>
+          <div class="col-md-6 text-end">
+            <div class="language-switch dropdown d-inline-block">
+              <button
+                class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                type="button"
+                id="langDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span id="current-lang">中文</span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="langDropdown">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="changeLanguage('zh');return false;"
+                    >中文</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    onclick="changeLanguage('en');return false;"
+                    >English</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+      <div class="container">
+        <!-- 文件上传区域 -->
+        <div class="upload-section">
+          <div id="upload-area" class="upload-area">
+            <div class="upload-icon">
+              <svg
+                width="64"
+                height="64"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7,10 12,15 17,10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </div>
+            <h3 data-i18n="upload.title">上传您的文件</h3>
+            <p data-i18n="upload.dragDrop">拖拽文件到此处或点击上传</p>
+            <input
+              type="file"
+              id="file-input"
+              accept=".pdf,.doc,.docx"
+              style="display: none"
+            />
+            <button
+              class="btn btn-primary"
+              onclick="document.getElementById('file-input').click()"
+            >
+              <span data-i18n="upload.button">选择文件</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 转换选项 -->
+        <div class="conversion-options">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-primary active"
+              data-type="pdf-to-word"
+            >
+              <span data-i18n="option.pdfToWord">PDF转Word</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-type="word-to-pdf"
+            >
+              <span data-i18n="option.wordToPdf">Word转PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 转换进度 -->
+        <div class="conversion-progress" style="display: none">
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              style="width: 0%"
+            ></div>
+          </div>
+          <p class="progress-text" data-i18n="conversion.processing">
+            转换中...
+          </p>
+        </div>
+
+        <!-- 下载区域 -->
+        <div class="download-section" style="display: none">
+          <div class="download-card">
+            <div class="download-icon">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7,10 12,15 17,10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </div>
+            <h4 data-i18n="download.title">转换完成</h4>
+            <p data-i18n="download.description">
+              您的文件已转换完成，点击下方按钮下载
+            </p>
+            <a href="#" class="btn btn-success btn-lg" id="download-btn">
+              <span data-i18n="download.button">下载文件</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 使用说明 -->
+    <section class="instructions">
+      <div class="container">
+        <h2 data-i18n="instructions.title">使用说明</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="step">
+              <div class="step-number">1</div>
+              <h4 data-i18n="instructions.step1.title">选择转换类型</h4>
+              <p data-i18n="instructions.step1.desc">
+                选择PDF转Word或Word转PDF
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="step">
+              <div class="step-number">2</div>
+              <h4 data-i18n="instructions.step2.title">上传文件</h4>
+              <p data-i18n="instructions.step2.desc">拖拽或点击上传您的文件</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="step">
+              <div class="step-number">3</div>
+              <h4 data-i18n="instructions.step3.title">下载结果</h4>
+              <p data-i18n="instructions.step3.desc">等待转换完成后下载文件</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 产品特色 -->
+    <section class="features">
+      <div class="container">
+        <h2 class="text-center mb-4">产品特色</h2>
+        <ul class="list-unstyled fs-5 text-center">
+          <li class="mb-2">不限次数转换，满足日常与高频办公需求</li>
+          <li class="mb-2">3页以内文档永久免费，超3页仅需1元/次，价格透明</li>
+          <li class="mb-2">极速转换，支持PDF与Word双向互转，操作简单</li>
+          <li class="mb-2">无需注册，打开即用，界面简洁，支持中英文切换</li>
+          <li class="mb-2">
+            注重隐私安全，文件仅用于本次转换，自动删除，不截留任何用户数据
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p>&copy; 2024 PDF转Word工具. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-end">
+            <a href="#about" data-i18n="footer.about">关于我们</a> |
+            <a href="#agreement" data-i18n="footer.agreement">用户协议</a> |
+            <a href="mailto:support@pdf2word.com" data-i18n="footer.contact"
+              >联系客服</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/conversion.js') }}"></script>
+  </body>
+</html>
